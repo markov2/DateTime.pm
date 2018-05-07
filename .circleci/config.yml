@@ -1,0 +1,122 @@
+version: 2.0
+
+references:
+  prereqs_key: &prereqs_key v2-distro-prereqs-{{ checksum "/tmp/circleci-perl-helpers-build-dir/cpanfile" }}-{{ checksum "/tmp/perl-version" }}
+
+  shared: &shared
+    steps:
+      - checkout
+      - run:
+          command: build-dist
+      - run:
+          command: /root/perl5/perlbrew/perls/$CIRCLECI_PERL_HELPERS_PERL/bin/perl -V > /tmp/perl-version
+      - restore_cache:
+          keys:
+            - *prereqs_key
+      - run:
+          command: install-prereqs
+      - save_cache:
+          key: *prereqs_key
+          paths:
+            - /tmp/circleci-perl-helpers-build-dir/local
+      - run:
+          command: prep-distro-for-tests
+      - run:
+          command: run-tests-with-prove
+
+jobs:
+  "5.26":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.26
+    <<: *shared
+  "5.26-thread":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.26-thread
+    <<: *shared
+  "5.24":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.24
+    <<: *shared
+  "5.24-thread":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.24-thread
+    <<: *shared
+  "5.22":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.22
+    <<: *shared
+  "5.22-thread":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.22-thread
+    <<: *shared
+  "5.20":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.20
+    <<: *shared
+  "5.20-thread":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.20-thread
+    <<: *shared
+  "5.18":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.18
+    <<: *shared
+  "5.18-thread":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.18-thread
+    <<: *shared
+  "5.16":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.16
+    <<: *shared
+  "5.16-thread":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.16-thread
+    <<: *shared
+  "5.14":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.14
+    <<: *shared
+  "5.14-thread":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.14-thread
+    <<: *shared
+  "5.12":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.12
+    <<: *shared
+  "5.12-thread":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.12-thread
+    <<: *shared
+  "5.10":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.10
+    <<: *shared
+  "5.10-thread":
+    docker:
+      - image: houseabsolute/circleci-perl-helpers-ubuntu:5.10-thread
+    <<: *shared
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "5.26"
+      - "5.26-thread"
+      - "5.24"
+      - "5.24-thread"
+      - "5.22"
+      - "5.22-thread"
+      - "5.20"
+      - "5.20-thread"
+      - "5.18"
+      - "5.18-thread"
+      - "5.16"
+      - "5.16-thread"
+      - "5.14"
+      - "5.14-thread"
+      - "5.12"
+      - "5.12-thread"
+      - "5.10"
+      - "5.10-thread"
